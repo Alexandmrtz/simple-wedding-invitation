@@ -42,6 +42,9 @@
   </head>
 
   <body>
+    <!-- Background Audio -->
+    <audio autoplay playsinline loop id="background-audio" src="image/Jazz%20Relajante.mp3"></audio>
+    <button id="audio-start-button" style="display:none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #996E6D; color: white; border: none; border-radius: 8px; padding: 12px 18px; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">Reproducir música</button>
     <!-- Begin Preloader -->
     <div class="preloader-wrapper">
       <div class="preloader">
@@ -533,6 +536,49 @@
         easing: "ease-out",
         duration: 800,
       });
+
+      // Audio Control Script
+      const audio = document.getElementById('background-audio');
+      const audioButton = document.getElementById('audio-start-button');
+      audio.volume = 0.85;
+
+      const showAudioButton = () => {
+        audioButton.style.display = 'inline-block';
+      };
+
+      const hideAudioButton = () => {
+        audioButton.style.display = 'none';
+      };
+
+      const tryPlayAudio = () => {
+        if (!audio) return;
+        const promise = audio.play();
+        if (promise !== undefined) {
+          promise
+            .then(() => {
+              hideAudioButton();
+            })
+            .catch(() => {
+              showAudioButton();
+            });
+        }
+      };
+
+      audioButton.addEventListener('click', () => {
+        audio.play().then(() => {
+          hideAudioButton();
+        }).catch(() => {
+          console.log('Audio play still blocked.');
+        });
+      });
+
+      window.addEventListener('load', tryPlayAudio);
+      document.addEventListener('DOMContentLoaded', tryPlayAudio);
+      document.addEventListener('click', () => {
+        if (audio.paused) {
+          tryPlayAudio();
+        }
+      }, { once: true });
     </script>
   </body>
 </html>
