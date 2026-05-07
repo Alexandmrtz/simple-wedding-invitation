@@ -495,6 +495,27 @@
                 <img src="image/divider-leaves.png" class="divider has-text-centered" alt="~~~">
               </div>
               <div class="space40px"></div>
+              <div class="gallery-section" data-aos="fade-up" data-aos-easing="linear">
+                <h2 class="gallery-title">Momentos conmemorativos</h2>
+                <div class="gallery-grid">
+                  <div class="gallery-item"><img src="image/image copy 7.png" alt="Reconocimiento 1" data-index="0"></div>
+                  <div class="gallery-item"><img src="image/image copy 6.png" alt="Reconocimiento 2" data-index="1"></div>
+                  <div class="gallery-item"><img src="image/image copy 8.png" alt="Reconocimiento 3" data-index="2"></div>
+                  <div class="gallery-item"><img src="image/image copy 9.png" alt="Reconocimiento 4" data-index="3"></div>
+                  <div class="gallery-item"><img src="image/image copy 10.png" alt="Reconocimiento 5" data-index="4"></div>
+                  <div class="gallery-item"><img src="image/image copy 11.png" alt="Reconocimiento 6" data-index="5"></div>
+                </div>
+              </div>
+              <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true">
+                <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+                <div class="lightbox-content">
+                  <button class="lightbox-close" id="lightbox-close">×</button>
+                  <button class="lightbox-arrow lightbox-prev" id="lightbox-prev">‹</button>
+                  <img class="lightbox-image" id="lightbox-image" src="" alt="Imagen conmemorativa">
+                  <button class="lightbox-arrow lightbox-next" id="lightbox-next">›</button>
+                </div>
+              </div>
+              <div class="space40px"></div>
               <p class="h2 subtitle" data-aos="fade-up" data-aos-easing="linear">
                 Con alegría,
                 <br>
@@ -539,46 +560,78 @@
 
       // Audio Control Script
       const audio = document.getElementById('background-audio');
-      const audioButton = document.getElementById('audio-start-button');
-      audio.volume = 0.85;
-
-      const showAudioButton = () => {
-        audioButton.style.display = 'inline-block';
-      };
-
-      const hideAudioButton = () => {
-        audioButton.style.display = 'none';
-      };
-
-      const tryPlayAudio = () => {
-        if (!audio) return;
+      
+      const playAudio = () => {
         const promise = audio.play();
         if (promise !== undefined) {
           promise
             .then(() => {
-              hideAudioButton();
+              console.log('Audio playing');
             })
             .catch(() => {
-              showAudioButton();
+              console.log('Autoplay restricted - user interaction required');
             });
         }
       };
 
-      audioButton.addEventListener('click', () => {
-        audio.play().then(() => {
-          hideAudioButton();
-        }).catch(() => {
-          console.log('Audio play still blocked.');
-        });
-      });
-
-      window.addEventListener('load', tryPlayAudio);
-      document.addEventListener('DOMContentLoaded', tryPlayAudio);
+      window.addEventListener('load', playAudio);
+      document.addEventListener('DOMContentLoaded', playAudio);
       document.addEventListener('click', () => {
         if (audio.paused) {
-          tryPlayAudio();
+          audio.play().catch(err => console.log(err));
         }
       }, { once: true });
+
+      // Lightbox carousel for commemorative gallery
+      const lightboxModal = document.getElementById('lightbox-modal');
+      const lightboxBackdrop = document.getElementById('lightbox-backdrop');
+      const lightboxImage = document.getElementById('lightbox-image');
+      const lightboxClose = document.getElementById('lightbox-close');
+      const lightboxPrev = document.getElementById('lightbox-prev');
+      const lightboxNext = document.getElementById('lightbox-next');
+      const galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
+      let currentImageIndex = 0;
+
+      const openLightbox = index => {
+        currentImageIndex = index;
+        const selectedImage = galleryImages[currentImageIndex];
+        lightboxImage.src = selectedImage.src;
+        lightboxImage.alt = selectedImage.alt;
+        lightboxModal.classList.add('visible');
+        lightboxModal.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeLightbox = () => {
+        lightboxModal.classList.remove('visible');
+        lightboxModal.setAttribute('aria-hidden', 'true');
+      };
+
+      const showPrevious = () => {
+        currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+        openLightbox(currentImageIndex);
+      };
+
+      const showNext = () => {
+        currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+        openLightbox(currentImageIndex);
+      };
+
+      galleryImages.forEach((img, index) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => openLightbox(index));
+      });
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightboxBackdrop.addEventListener('click', closeLightbox);
+      lightboxPrev.addEventListener('click', showPrevious);
+      lightboxNext.addEventListener('click', showNext);
+
+      document.addEventListener('keydown', event => {
+        if (!lightboxModal.classList.contains('visible')) return;
+        if (event.key === 'Escape') closeLightbox();
+        if (event.key === 'ArrowLeft') showPrevious();
+        if (event.key === 'ArrowRight') showNext();
+      });
     </script>
   </body>
 </html>
