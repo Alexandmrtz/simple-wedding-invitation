@@ -481,7 +481,7 @@
                 Cuídese y manténgase sano :)
                 </p>
      
-              <a href="https://api.whatsapp.com/send?phone=72110297&text=Hola%20CPW,%20confirmo%20mi%20asistencia%20al%20evento" class="button btn-whatsapp" target="_blank" data-aos="zoom-in">
+              <a href="https://api.whatsapp.com/send?phone=72110297&text=Hola%2C%20confirmo%20mi%20asistencia%20al%20evento%20del%20D%C3%ADa%20de%20la%20Enfermera.%20Muchas%20gracias%20por%20la%20invitaci%C3%B3n%20y%20nos%20vemos%20el%2014%20de%20mayo.%20%F0%9F%8C%B8" class="button btn-whatsapp" target="_blank" data-aos="zoom-in">
                 <i class="fab fa-whatsapp"></i>
                 &nbsp;&nbsp;Confirmar asistencia
               </a>
@@ -501,9 +501,9 @@
                   <div class="gallery-item"><img src="image/image copy 7.png" alt="Reconocimiento 1" data-index="0"></div>
                   <div class="gallery-item"><img src="image/image copy 6.png" alt="Reconocimiento 2" data-index="1"></div>
                   <div class="gallery-item"><img src="image/image copy 8.png" alt="Reconocimiento 3" data-index="2"></div>
-                  <div class="gallery-item"><img src="image/image copy 9.png" alt="Reconocimiento 4" data-index="3"></div>
-                  <div class="gallery-item"><img src="image/image copy 10.png" alt="Reconocimiento 5" data-index="4"></div>
-                  <div class="gallery-item"><img src="image/image copy 11.png" alt="Reconocimiento 6" data-index="5"></div>
+                  <div class="gallery-item"><img src="image/image copy 12.png" alt="Reconocimiento 4" data-index="3"></div>
+                  <div class="gallery-item"><img src="image/image copy 14.png" alt="Reconocimiento 5" data-index="4"></div>
+                  <div class="gallery-item"><img src="image/image copy 13.png" alt="Reconocimiento 6" data-index="5"></div>
                 </div>
               </div>
               <div class="lightbox-modal" id="lightbox-modal" aria-hidden="true">
@@ -513,6 +513,7 @@
                   <button class="lightbox-arrow lightbox-prev" id="lightbox-prev">‹</button>
                   <img class="lightbox-image" id="lightbox-image" src="" alt="Imagen conmemorativa">
                   <button class="lightbox-arrow lightbox-next" id="lightbox-next">›</button>
+                  <div class="lightbox-counter" id="lightbox-counter">1 de 1</div>
                 </div>
               </div>
               <div class="space40px"></div>
@@ -589,14 +590,20 @@
       const lightboxClose = document.getElementById('lightbox-close');
       const lightboxPrev = document.getElementById('lightbox-prev');
       const lightboxNext = document.getElementById('lightbox-next');
+      const lightboxCounter = document.getElementById('lightbox-counter');
       const galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
       let currentImageIndex = 0;
+
+      const updateCounter = () => {
+        lightboxCounter.textContent = `${currentImageIndex + 1} de ${galleryImages.length}`;
+      };
 
       const openLightbox = index => {
         currentImageIndex = index;
         const selectedImage = galleryImages[currentImageIndex];
         lightboxImage.src = selectedImage.src;
         lightboxImage.alt = selectedImage.alt;
+        updateCounter();
         lightboxModal.classList.add('visible');
         lightboxModal.setAttribute('aria-hidden', 'false');
       };
